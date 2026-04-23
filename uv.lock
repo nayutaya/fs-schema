@@ -34,6 +34,7 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "lizard" },
     { name = "pytest" },
     { name = "ruff" },
     { name = "ty" },
@@ -47,6 +48,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "lizard", specifier = ">=1.22.1" },
     { name = "pytest", specifier = ">=8.4.2" },
     { name = "ruff", specifier = ">=0.15.9" },
     { name = "ty", specifier = ">=0.0.29" },
@@ -62,12 +64,34 @@ wheels = [
 ]
 
 [[package]]
+name = "lizard"
+version = "1.22.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pathspec" },
+    { name = "pygments" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b3/c7/776f75710b0033d69249b45ed571f8a314c1a8980c1d3c64e3c12f541869/lizard-1.22.1.tar.gz", hash = "sha256:29fe26f3746f8539227ba909a6143c749548690271e13a3f73204b22e2e62590", size = 90616, upload-time = "2026-04-23T01:54:30.645Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/45/aa/54d9292917f0f9cc684fd053f879e3e8292bf4bc40e984d542dbfe393063/lizard-1.22.1-py2.py3-none-any.whl", hash = "sha256:cc629472d4b031f7692bd7f7e78d2574029008148fba75e45f3592774c8e7420", size = 98713, upload-time = "2026-04-23T01:54:29.008Z" },
+]
+
+[[package]]
 name = "packaging"
 version = "26.1"
 source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/df/de/0d2b39fb4af88a0258f3bac87dfcbb48e73fbdea4a2ed0e2213f9a4c2f9a/packaging-26.1.tar.gz", hash = "sha256:f042152b681c4bfac5cae2742a55e103d27ab2ec0f3d88037136b6bfe7c9c5de", size = 215519, upload-time = "2026-04-14T21:12:49.362Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/7a/c2/920ef838e2f0028c8262f16101ec09ebd5969864e5a64c4c05fad0617c56/packaging-26.1-py3-none-any.whl", hash = "sha256:5d9c0669c6285e491e0ced2eee587eaf67b670d94a19e94e3984a481aba6802f", size = 95831, upload-time = "2026-04-14T21:12:47.56Z" },
+]
+
+[[package]]
+name = "pathspec"
+version = "1.1.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/2e/17/9c3094b822982b9f1ea666d8580ce59000f61f87c1663556fb72031ad9ec/pathspec-1.1.0.tar.gz", hash = "sha256:f5d7c555da02fd8dde3e4a2354b6aba817a89112fa8f333f7917a2a4834dd080", size = 133918, upload-time = "2026-04-23T01:46:22.298Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/fa/c9/8eed0486f074e9f1ca7f8ce5ad663e65f12fdab344028d658fa1b03d35e0/pathspec-1.1.0-py3-none-any.whl", hash = "sha256:574b128f7456bd899045ccd142dd446af7e6cfd0072d63ad73fbc55fbb4aaa42", size = 56264, upload-time = "2026-04-23T01:46:20.606Z" },
 ]
 
 [[package]]

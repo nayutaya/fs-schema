@@ -41,6 +41,7 @@ fs-schema = "fs_schema.cli:main"
 
 [dependency-groups]
 dev = [
+    "lizard>=1.22.1",
     "pytest>=8.4.2",
     "ruff>=0.15.9",
     "ty>=0.0.29",

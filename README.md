@@ -170,7 +170,7 @@ Install dependencies:
 
 ```sh
 mise install
-uv sync
+uv sync --group dev
 ```
 
 Run tests and checks:
@@ -180,6 +180,7 @@ uv run pytest
 uv run ruff check --fix
 uv run ruff format
 uv run ty check
+uv run lizard -l python src tests
 ```
 
 Build the package:

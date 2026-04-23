@@ -39,3 +39,6 @@ jobs:
 
       - name: Type check
         run: uv run --frozen ty check
+
+      - name: Check complexity
+        run: uv run --frozen lizard -l python src tests
