@@ -1,0 +1,5 @@
+version: 0
+rules:
+  - type: forbid
+    kind: directory
+    path: dist

@@ -1,0 +1,29 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/env python3 .codex/hooks/python_session_start.py",
+            "statusMessage": "Capturing Python baseline",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/env python3 .codex/hooks/python_stop.py",
+            "statusMessage": "Running Python lint/type hooks",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,189 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "https://github.com/nayutaya/fs-schema/raw/main/src/fs_schema/schema/fs-schema.schema.yaml"
+title: "FS Schema"
+description: "JSON Schema for validating the minimal FS Schema format"
+type: object
+additionalProperties: false
+required:
+  - version
+  - rules
+properties:
+  version:
+    description: "Version of the schema format"
+    const: 0
+  options:
+    $ref: "#/$defs/options"
+  rules:
+    description: "List of validation rules"
+    type: array
+    items:
+      oneOf:
+        - $ref: "#/$defs/requireRule"
+        - $ref: "#/$defs/forbidRule"
+        - $ref: "#/$defs/impliesRule"
+        - $ref: "#/$defs/countRule"
+
+$defs:
+  path:
+    title: "RelativePath"
+    description: "Path relative to the root, using `/` as the separator, excluding `..` segments, and not ending with `/`"
+    type: string
+    minLength: 1
+    pattern: "^(?!/)(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$))(?!\\.?$)(?!.*?/$).+$"
+  pathRegex:
+    title: "PathRegex"
+    description: "Regular expression matched against the entire normalized path relative to the root"
+    type: string
+    minLength: 1
+  entryKind:
+    title: "EntryKind"
+    description: "Kind of file system entry"
+    type: string
+    enum:
+      - file
+      - directory
+      - symlink
+  options:
+    title: "ValidationOptions"
+    description: "Global options for validation"
+    type: object
+    additionalProperties: false
+    properties:
+      case_sensitive:
+        type: boolean
+        default: true
+        description: "Whether path comparisons are case-sensitive"
+      follow_symlinks:
+        type: boolean
+        default: false
+        description: "Whether symbolic links are followed during validation"
+  requireRule:
+    title: "RequireRule"
+    description: "Rule that requires a path to exist with the specified entry kind"
+    type: object
+    additionalProperties: false
+    required:
+      - type
+      - kind
+    oneOf:
+      - required:
+          - path
+      - required:
+          - path_regex
+    properties:
+      id:
+        type: string
+        minLength: 1
+        description: "Rule identifier"
+      type:
+        type: string
+        const: require
+      path:
+        $ref: "#/$defs/path"
+      path_regex:
+        $ref: "#/$defs/pathRegex"
+      kind:
+        $ref: "#/$defs/entryKind"
+  forbidRule:
+    title: "ForbidRule"
+    description: "Rule that forbids a path from existing with the specified entry kind"
+    type: object
+    additionalProperties: false
+    required:
+      - type
+      - kind
+    oneOf:
+      - required:
+          - path
+      - required:
+          - path_regex
+    properties:
+      id:
+        type: string
+        minLength: 1
+        description: "Rule identifier"
+      type:
+        type: string
+        const: forbid
+      path:
+        $ref: "#/$defs/path"
+      path_regex:
+        $ref: "#/$defs/pathRegex"
+      kind:
+        $ref: "#/$defs/entryKind"
+  impliesSelector:
+    title: "ImpliesSelector"
+    description: "Single-path selector used by implies rules"
+    type: object
+    additionalProperties: false
+    required:
+      - path
+      - exists
+    properties:
+      path:
+        $ref: "#/$defs/path"
+      exists:
+        type: boolean
+        const: true
+  impliesRule:
+    title: "ImpliesRule"
+    description: "Rule that requires one path to exist when another path exists"
+    type: object
+    additionalProperties: false
+    required:
+      - type
+      - if
+      - then
+    properties:
+      id:
+        type: string
+        minLength: 1
+        description: "Rule identifier"
+      type:
+        type: string
+        const: implies
+      if:
+        $ref: "#/$defs/impliesSelector"
+      then:
+        $ref: "#/$defs/impliesSelector"
+  countSelector:
+    title: "CountSelector"
+    description: "Selector used by count rules"
+    type: object
+    additionalProperties: false
+    required:
+      - path_regex
+    properties:
+      path_regex:
+        $ref: "#/$defs/pathRegex"
+      kind:
+        $ref: "#/$defs/entryKind"
+  countRule:
+    title: "CountRule"
+    description: "Rule that validates the number of entries matching a selector"
+    type: object
+    additionalProperties: false
+    required:
+      - type
+      - select
+    anyOf:
+      - required:
+          - minimum
+      - required:
+          - maximum
+    properties:
+      id:
+        type: string
+        minLength: 1
+        description: "Rule identifier"
+      type:
+        type: string
+        const: count
+      select:
+        $ref: "#/$defs/countSelector"
+      minimum:
+        type: integer
+        minimum: 0
+      maximum:
+        type: integer
+        minimum: 0

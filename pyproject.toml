@@ -1,0 +1,73 @@
+[project]
+name = "fs-schema"
+version = "0.2.0"
+description = "A Python library and command line tool for validating file and directory structures"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Yuya Kato" }]
+keywords = [
+    "filesystem",
+    "json-schema",
+    "schema",
+    "validation",
+    "yaml",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: System :: Filesystems",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "click>=8.3.2",
+    "pyyaml>=6.0.3",
+]
+
+[project.urls]
+Repository = "https://github.com/nayutaya/fs-schema"
+
+[project.scripts]
+fs-schema = "fs_schema.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+    "ruff>=0.15.9",
+    "ty>=0.0.29",
+]
+
+[build-system]
+requires = ["uv_build>=0.11.7,<0.12"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "fs_schema"
+module-root = "src"
+namespace = true
+source-exclude = ["/tests"]
+wheel-exclude = ["/tests"]
+
+[tool.ruff]
+target-version = "py312"
+
+[tool.ruff.lint]
+extend-select = ["I", "UP", "TID"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.isort]
+known-first-party = ["fs_schema"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

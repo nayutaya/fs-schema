@@ -1,0 +1,9 @@
+version: 0
+rules:
+  - type: implies
+    if:
+      path: AGENTS.md
+      exists: true
+    then:
+      path: CLAUDE.md
+      exists: true
