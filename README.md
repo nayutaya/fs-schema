@@ -180,7 +180,7 @@ uv run pytest
 uv run ruff check --fix
 uv run ruff format
 uv run ty check
-uv run lizard -l python -C 15 -L 100 src tests
+uv run lizard -l python src tests
 ```
 
 Build the package:
