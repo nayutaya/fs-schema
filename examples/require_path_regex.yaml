@@ -1,0 +1,8 @@
+version: 0
+rules:
+  - type: require
+    path_regex: README\.md
+    kind: file
+  - type: require
+    path_regex: src
+    kind: directory

@@ -1,0 +1,31 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "https://github.com/nayutaya/fs-schema/raw/main/src/fs_schema/schema/fs-schema-dump-entry.schema.yaml"
+title: "FS Schema Dump Entry"
+description: "JSON Schema for validating each line of an FS Schema JSONL dump"
+type: object
+additionalProperties: false
+required:
+  - path
+  - kind
+  - resolved_kind
+properties:
+  path:
+    title: "RelativePath"
+    description: "Path relative to the root, using `/` as the separator and excluding `..` segments"
+    type: string
+    minLength: 1
+    pattern: "^(?!/)(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$))(?!\\.?$).+$"
+  kind:
+    $ref: "#/$defs/entryKind"
+  resolved_kind:
+    $ref: "#/$defs/entryKind"
+
+$defs:
+  entryKind:
+    title: "EntryKind"
+    description: "Kind of file system entry"
+    type: string
+    enum:
+      - file
+      - directory
+      - symlink

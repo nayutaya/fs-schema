@@ -1,0 +1,8 @@
+version: 0
+rules:
+  - type: count
+    select:
+      path_regex: tests/.+\.py
+      kind: file
+    minimum: 1
+    maximum: 1000
