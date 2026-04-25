@@ -12,6 +12,7 @@ It lets you describe expected filesystem layouts in YAML or JSON, then validate 
 * Count matching entries with minimum and maximum bounds
 * Validate local directories, ZIP archives, or JSONL filesystem dumps
 * Export the built-in JSON Schemas for FS Schema documents and dump entries
+* Compile a schema into a standalone bash script for validation without Python
 
 ## Installation
 
@@ -105,6 +106,15 @@ fs-schema show-schema --json
 fs-schema show-dump-schema
 fs-schema show-dump-schema --json
 ```
+
+Compile a schema into a standalone bash script and run it without Python:
+
+```sh
+fs-schema compile --schema examples/require.yaml --output check.sh
+bash check.sh .
+```
+
+The compiled script accepts the target directory as its first argument (defaults to the current directory), prints diagnostics to standard error, and exits with status `0` on success or `1` on failure. The script uses bash's POSIX ERE regular expressions, so Python-only regex constructs (such as `\d` or `\w`) may need to be rewritten when the schema uses `path_regex`.
 
 ## Schema Format
 

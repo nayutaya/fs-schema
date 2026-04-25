@@ -1,3 +1,4 @@
+from fs_schema.compiler import compile_to_bash
 from fs_schema.fs_dump import (
     DumpEntry,
     InvalidDumpFileError,
@@ -44,6 +45,7 @@ __all__ = [
     "Schema",
     "ValidationOptions",
     "ValidationResult",
+    "compile_to_bash",
     "dump_as_jsonl",
     "dump_filesystem",
     "dump_zip_file",

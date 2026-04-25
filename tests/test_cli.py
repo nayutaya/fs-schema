@@ -767,6 +767,7 @@ def test_help_output_is_in_english() -> None:
     assert "Validate the filesystem dump JSONL file itself" in result.output
     assert "Validate a file system tree against an FS Schema" in result.output
     assert "Dump filesystem information for later validation" in result.output
+    assert "Compile an FS Schema into a standalone bash script" in result.output
 
 
 def test_validate_help_output_describes_options() -> None:
@@ -809,3 +810,76 @@ def test_show_dump_schema_help_output_describes_options() -> None:
     assert result.exit_code == 0
     assert "--json" in result.output
     assert "Render the schema as JSON instead of YAML" in result.output
+
+
+def test_compile_command_writes_bash_script(tmp_path: Path) -> None:
+    schema_path = tmp_path / "schema.yaml"
+    schema_path.write_text(
+        "\n".join(
+            [
+                "version: 0",
+                "rules:",
+                "  - type: require",
+                "    path: README.md",
+                "    kind: file",
+            ],
+        ),
+        encoding="utf-8",
+    )
+    output_path = tmp_path / "check.sh"
+
+    result = CliRunner().invoke(
+        cli,
+        ["compile", "--schema", str(schema_path), "--output", str(output_path)],
+    )
+
+    assert result.exit_code == 0
+    assert f"Compiled bash script written: {output_path}" in result.output
+    script = output_path.read_text(encoding="utf-8")
+    assert script.startswith("#!/usr/bin/env bash\n")
+    assert "README.md does not exist" in script
+
+
+def test_compile_command_writes_script_to_stdout(tmp_path: Path) -> None:
+    schema_path = tmp_path / "schema.yaml"
+    schema_path.write_text(
+        "version: 0\nrules: []\n",
+        encoding="utf-8",
+    )
+
+    result = CliRunner().invoke(
+        cli,
+        ["compile", "-s", str(schema_path), "-o", "-"],
+    )
+
+    assert result.exit_code == 0
+    assert result.output.startswith("#!/usr/bin/env bash\n")
+    assert 'exit "$fs_schema__exit_code"' in result.output
+
+
+def test_compile_command_fails_for_invalid_schema(tmp_path: Path) -> None:
+    schema_path = tmp_path / "invalid.yaml"
+    schema_path.write_text(
+        "version: 0\nrules:\n  - type: require\n    path: ../README.md\n    kind: file\n",
+        encoding="utf-8",
+    )
+    output_path = tmp_path / "check.sh"
+
+    result = CliRunner().invoke(
+        cli,
+        ["compile", "-s", str(schema_path), "-o", str(output_path)],
+    )
+
+    assert result.exit_code == 1
+    assert "Invalid schema file" in result.output
+    assert not output_path.exists()
+
+
+def test_compile_help_output_describes_options() -> None:
+    result = CliRunner().invoke(cli, ["compile", "--help"])
+
+    assert result.exit_code == 0
+    assert "-s, --schema" in result.output
+    assert "-o, --output" in result.output
+    assert "Path to the FS Schema YAML or JSON file" in result.output
+    assert "Path to the output bash script, or - for stdout" in result.output

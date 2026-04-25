@@ -6,6 +6,7 @@ from pathlib import Path
 import click
 import yaml
 
+from fs_schema.compiler import compile_to_bash
 from fs_schema.fs_dump import (
     InvalidDumpFileError,
     InvalidZipFileError,
@@ -177,6 +178,36 @@ def validate_command(
     for diagnostic in result.diagnostics:
         click.echo(f"[{diagnostic.code}] {diagnostic.message}", err=True)
     raise click.exceptions.Exit(1)
+
+
+@cli.command(help="Compile an FS Schema into a standalone bash script")
+@click.option(
+    "-s",
+    "--schema",
+    "schema_path",
+    type=EXISTING_FILE_PATH,
+    required=True,
+    help="Path to the FS Schema YAML or JSON file",
+)
+@click.option(
+    "-o",
+    "--output",
+    "output_path",
+    type=click.Path(path_type=Path, dir_okay=False),
+    required=True,
+    help="Path to the output bash script, or - for stdout",
+)
+def compile_command(schema_path: Path, output_path: Path) -> None:
+    try:
+        schema = load_schema_file(schema_path)
+    except InvalidSchemaFileError as exc:
+        raise click.ClickException(str(exc)) from exc
+    script = compile_to_bash(schema)
+    if output_path == Path("-"):
+        click.echo(script, nl=False)
+        return
+    output_path.write_text(script, encoding="utf-8")
+    click.echo(f"Compiled bash script written: {output_path}")
 
 
 @cli.command(help="Dump filesystem information for later validation")
